@@ -7,7 +7,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from datetime import datetime, timedelta
 from matplotlib.figure import Figure
 
-# Create the graph as undirected
 G = nx.Graph()
 
 # Add nodes (Gates, Restaurants, Shuttle Stops, etc.)
@@ -19,7 +18,7 @@ nodes = [
 ]
 G.add_nodes_from(nodes)
 
-# Add edges with distances (weights)
+# Adding weights
 edges = [
     ("Gate 1", "Restaurant A", 5),
     ("Gate 1", "Shuttle Stop 1", 2),
@@ -49,10 +48,10 @@ edges = [
 ]
 G.add_weighted_edges_from(edges)
 
-# Store the layout positions (Use the original layout positions)
+
 pos = nx.spring_layout(G, seed=42, k=0.5, iterations=50)
 
-# Dijkstra's algorithm to find the shortest path
+# Dijkstra's algorithm 
 def find_shortest_path(graph, source, destination):
     try:
         path = nx.dijkstra_path(graph, source, destination, weight='weight')
@@ -102,7 +101,7 @@ class AirportNavigationApp(tk.Tk):
         self.destination_var.set("Gate 15")  # Default value
         self.destination_entry.grid(row=1, column=1, padx=5, pady=5)
 
-        # Boarding Time Button
+        # Boarding Time 
         boarding_button = tk.Button(control_frame, text="Enter Boarding Time", font=("Helvetica", 12, "bold"), command=self.prompt_boarding_time)
         boarding_button.grid(row=2, column=1, padx=5, pady=5, sticky='w')  # Position the button below the destination entry
 
@@ -110,7 +109,7 @@ class AirportNavigationApp(tk.Tk):
         calculate_button = tk.Button(control_frame, text="Find Shortest Path", font=("Helvetica", 12, "bold"), bg="#4CAF50", fg="white", command=self.calculate_path)
         calculate_button.grid(row=2, column=2, rowspan=2, padx=10, pady=5)
 
-        # Output Area
+        
         self.output_area = tk.Text(self, height=5, width=100, state='disabled', font=("Helvetica", 12))
         self.output_area.pack(pady=10)
 
@@ -122,7 +121,7 @@ class AirportNavigationApp(tk.Tk):
         self.time_remaining_label = tk.Label(self, text="", font=("Helvetica", 12), fg='red')
         self.time_remaining_label.pack(anchor='ne', padx=20, pady=10)  # Positioned below the clock label
 
-        # Canvas for graph
+        
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
     def prompt_boarding_time(self):
@@ -172,7 +171,7 @@ class AirportNavigationApp(tk.Tk):
     def plot_graph(self, path=None):
         self.ax.clear()  # Clear previous plots
 
-        # Define node colors
+        
         node_colors = []
         for node in self.graph.nodes:
             if "Gate" in node:
@@ -186,12 +185,12 @@ class AirportNavigationApp(tk.Tk):
             else:
                 node_colors.append('#03A9F4')  # Light Blue
 
-        # Draw all nodes and edges
+        
         nx.draw_networkx_edges(self.graph, self.pos, ax=self.ax, edge_color='gray', width=1)
         nx.draw_networkx_nodes(self.graph, self.pos, ax=self.ax, node_color=node_colors, node_size=800)
         nx.draw_networkx_labels(self.graph, self.pos, ax=self.ax, font_size=8, font_weight='bold')
 
-        # Highlight the shortest path if provided
+        
         if path:
             # Prepare edge list for the path
             path_edges = list(zip(path, path[1:]))
@@ -207,7 +206,7 @@ class AirportNavigationApp(tk.Tk):
         self.clock_label.config(text=now)
         self.after(1000, self.update_clock)  # Update clock every second
 
-# Run the Application
+
 if _name_ == "_main_":
     app = AirportNavigationApp(G)
     app.mainloop()
